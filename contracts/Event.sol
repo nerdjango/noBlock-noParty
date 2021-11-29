@@ -68,7 +68,7 @@ contract Event is EventAdmins{
     mapping (address => Participant) public participants;
 
     /* Modifiers */
-    modifier onlyActive {
+    modifier eventActive {
         require(!ended);
         _;
     }
@@ -78,7 +78,7 @@ contract Event is EventAdmins{
         _;
     }
 
-    modifier onlyEnded {
+    modifier eventEnded {
         require(ended);
         _;
     }
@@ -101,7 +101,7 @@ contract Event is EventAdmins{
         participants[msg.sender] = Participant(_participant, msg.sender, false, false);
     }
 
-    function register(string memory _participant) external payable onlyActive{
+    function register(string memory _participant) external payable eventActive{
         registerInternal(_participant);
     }
 
@@ -118,27 +118,27 @@ contract Event is EventAdmins{
         return uint(totalBalance()) / uint(attended);
     }
 
-    function endEvent() external onlyOwner onlyActive{
+    function endEvent() external onlyOwner eventActive{
         payoutAmount = payout();
         ended = true;
         endedAt = block.timestamp;
     }
 
-    function cancel() external onlyOwner onlyActive{
+    function cancel() external onlyOwner eventActive{
         payoutAmount = requiredDeposit;
         cancelled = true;
         ended = true;
         endedAt = block.timestamp;
     }
 
-    function clear() external onlyOwner onlyEnded{
+    function clear() external onlyOwner eventEnded{
         require(block.timestamp > endedAt + coolingPeriod);
         uint leftOver = totalBalance();
         address owner=owner();
         payable(owner).transfer(leftOver);
     }
 
-    function setLimitOfParticipants(uint _maxParticipants) external onlyOwner onlyActive{
+    function setLimitOfParticipants(uint _maxParticipants) external onlyOwner eventActive{
         maxParticipants = _maxParticipants;
     }
 
@@ -146,7 +146,7 @@ contract Event is EventAdmins{
         eventName = _eventName;
     }
 
-    function attend(address[] memory _addresses) external onlyAdmin onlyActive{
+    function attend(address[] memory _addresses) external onlyAdmin eventActive{
         for( uint i = 0; i < _addresses.length; i++){
             address _addr = _addresses[i];
             require(isRegistered(_addr));
