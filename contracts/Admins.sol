@@ -22,11 +22,12 @@ contract EventAdmins is AccessControlEnumerable, Destructible{
             _revokeRole(EVENT_ADMIN_ROLE, addressList[i]);
         }
     }
-    function getAdminList() view public returns(address[] memory){
-        return getRoleMembers(EVENT_ADMIN_ROLE);
-    }
     function numOfAdmins() view public returns(uint){
         return getRoleMemberCount(EVENT_ADMIN_ROLE);
+    }
+    function isAdmin(address _addr) public view returns(bool){
+        require(hasRole(EVENT_ADMIN_ROLE, _addr));
+        return hasRole(EVENT_ADMIN_ROLE, _addr);
     }
 
 }

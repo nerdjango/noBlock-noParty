@@ -38,15 +38,6 @@ abstract contract AccessControlEnumerable is IAccessControlEnumerable, AccessCon
         return _roleMembers[role].at(index);
     }
 
-    //My function to help return EVENT_ADMIN_MEMBERS
-    function getRoleMembers(bytes32 role) public view returns (address[] memory) {
-        address[] memory RoleMembers;
-        for (uint256 index = 0; index < _roleMembers[role].length(); index++) {
-            RoleMembers[index]=(_roleMembers[role].at(index));
-        }
-        return RoleMembers;
-    }
-
     /**
      * @dev Returns the number of accounts that have `role`. Can be used
      * together with {getRoleMember} to enumerate all bearers of a role.
