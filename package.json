@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/nerdjango/noBlock-noParty#readme",
   "dependencies": {
-    "@openzeppelin/contracts": "^4.4.0"
+    "@openzeppelin/contracts": "^4.4.0",
+    "truffle-assertions": "^0.9.2"
   }
 }

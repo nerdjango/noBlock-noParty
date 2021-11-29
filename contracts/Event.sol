@@ -20,7 +20,7 @@ contract Event is EventAdmins{
                 _grantRole(EVENT_ADMIN_ROLE, _adminList[i]);
             }
         }
-        
+
         if (bytes(_eventName).length != 0){
             eventName = _eventName;
         } else {
