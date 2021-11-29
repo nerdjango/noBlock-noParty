@@ -1,0 +1,25 @@
+{
+  "name": "noblock-noparty",
+  "version": "1.0.0",
+  "description": "A smart contract clone of the BlockParty event management dApp.",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nerdjango/noBlock-noParty.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nerdjango/noBlock-noParty/issues"
+  },
+  "homepage": "https://github.com/nerdjango/noBlock-noParty#readme",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.4.0"
+  }
+}
