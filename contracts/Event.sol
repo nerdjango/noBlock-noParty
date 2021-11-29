@@ -6,6 +6,7 @@ import "./Admins.sol";
 
 contract Event is EventAdmins{
     constructor(
+        address[] memory _adminList,
         string memory _eventName,
         uint256 _requiredDeposit,
         uint _maxParticipants,
@@ -13,6 +14,13 @@ contract Event is EventAdmins{
     ){
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(EVENT_ADMIN_ROLE, _msgSender());
+
+        if (_adminList.length > 0){
+            for(uint i = 0; i < _adminList.length; i++){
+                _grantRole(EVENT_ADMIN_ROLE, _adminList[i]);
+            }
+        }
+        
         if (bytes(_eventName).length != 0){
             eventName = _eventName;
         } else {
