@@ -138,7 +138,7 @@ contract Event is EventAdmins{
         payable(owner).transfer(leftOver);
     }
 
-    function setLimitOfParticipants(uint _maxParticipants) external onlyOwner eventActive{
+    function setMaxParticipants(uint _maxParticipants) external onlyOwner eventActive{
         maxParticipants = _maxParticipants;
     }
 
@@ -154,5 +154,15 @@ contract Event is EventAdmins{
             participants[_addr].attended = true;
             attended++;
         }
+    }
+    function withdraw() external eventEnded{
+        require(payoutAmount > 0);
+        Participant memory participant = participants[msg.sender];
+        require(participant.addr == msg.sender);
+        require(cancelled || participant.attended);
+        require(participant.paid == false);
+
+        participant.paid = true;
+        payable(participant.addr).transfer(payoutAmount);
     }
 }

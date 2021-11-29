@@ -1,7 +1,7 @@
 const Event = artifacts.require("Event");
 const truffleAssert = require("truffle-assertions")
 
-contract("Event", accounts => {
+contract.skip("Event", accounts => {
     it("should assert event admin role.", async() => {
         let event = await Event.deployed()
         let owner = await event.owner()
@@ -46,8 +46,24 @@ contract("Event", accounts => {
         event.register("Adam Doe", { from: accounts[6], value: 1000 })
         event.register("Adam Doe", { from: accounts[7], value: 1000 })
         await truffleAssert.reverts(event.register("Adam Doe", { from: accounts[8], value: 1000 })) //Event is full so it reverts
+        await event.setMaxParticipants(6) //increase maximum participants by 1
+        await truffleAssert.passes(event.register("Adam Doe", { from: accounts[8], value: 1000 })) //passes as the event has one lucky slot
+        await truffleAssert.reverts(event.register("Adam Doe", { from: accounts[9], value: 1000 })) //Event is full so it reverts again
     })
     it("should allow attendees to receive payout after event.", async() => {
-
+        let event = await Event.deployed()
+        let list1 = [accounts[5], accounts[6], accounts[7], accounts[9]] // accounts[9] is not registered
+        let list2 = [accounts[5], accounts[6], accounts[7]]
+        await truffleAssert.reverts(event.attend(list1)) // reverts as accounts[9] is not registered
+        await truffleAssert.passes(event.attend(list2))
+        await truffleAssert.reverts(event.endEvent({ from: accounts[3] })) // reverts as accounts[3] is not owner of event
+        await truffleAssert.passes(event.endEvent()) // passes as accounts[0] is owner of event
+        let payoutAmount = await event.payout()
+        assert.equal(payoutAmount, 2000) // 3 out of 6 participants attended for 1000 each hence the 3 of them share 6000wei 
+        await truffleAssert.passes(event.withdraw({ from: accounts[5] }))
+        await truffleAssert.passes(event.withdraw({ from: accounts[6] }))
+        await truffleAssert.passes(event.withdraw({ from: accounts[7] }))
+        let eventContractBalance = await event.totalBalance()
+        assert.equal(eventContractBalance, 0)
     })
 })
